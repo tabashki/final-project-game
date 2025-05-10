@@ -8,16 +8,20 @@ Prerequisites
 
 This project uses .NET 9, make sure to grab the latest SDK first!
 
-Either run
+Currently supported runtime platforms:
+ - Windows 64-bit
+ - Linux 64-bit
+ - MacOS (x86-64/arm64)
+
+To get the whole repo and `FNA` dependencies from the start:
 ```
 git clone --recursive
 ```
-from the start to get the whole repo and dependencie from the start,
-otherwise run:
+
+Otherwise submodule dependencies can be fetched/updated manually using:
 ```
 git submodule update --init
 ```
-to make sure you have the full `FNA` source code.
 
 Building
 ========
