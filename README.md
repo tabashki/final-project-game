@@ -3,8 +3,8 @@ Final Project Game
 
 _(Proper title TBD)_
 
-Building
-========
+Prerequisites
+=============
 
 This project uses .NET 9, make sure to grab the latest SDK first!
 
@@ -19,10 +19,17 @@ git submodule update --init
 ```
 to make sure you have the full `FNA` source code.
 
-Build and run using:
+Building
+========
+
+Build and run via command line using:
 ```
 dotnet run --project Game/Game.csproj
 ```
+
+**OR**
+
+Open the `Game.sln` solution in your IDE and build and run from there
 
 Compile any changes to Effects using:
 ```
