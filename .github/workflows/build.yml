@@ -1,12 +1,16 @@
-name: dotnet build
+name: linux build
 
 on: [push]
 
 jobs:
   build:
     runs-on: [self-hosted, linux]
+    env:
+      DOTNET_INSTALL_DIR: "./.dotnet"
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Setup dotnet 9
         uses: actions/setup-dotnet@v4
         with:
