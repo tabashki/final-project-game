@@ -397,8 +397,9 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
-# JetBrains Rider
+# JetBrains
 *.sln.iml
+.idea/
 
 # macOS junk
 .DS_Store
