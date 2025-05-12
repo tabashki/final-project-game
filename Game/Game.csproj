@@ -15,34 +15,21 @@
     <Content Include="./Content/**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <Content Include="../fnalibs/linux/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Content Include="../fnalibs/macos/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <Content Include="../fnalibs/windows/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <ItemGroup>
     <Effects Include="Effects/DebugDraw.fx" />
   </ItemGroup>
-
-  <Target Name="CopyFNALibs" AfterTargets="Build">
-    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-      <FNALibraryFiles Include="../fnalibs/linux/libFAudio.so.0" />
-      <FNALibraryFiles Include="../fnalibs/linux/libFNA3D.so.0" />
-      <FNALibraryFiles Include="../fnalibs/linux/libSDL3.so.0" />
-      <FNALibraryFiles Include="../fnalibs/linux/libtheorafile.so" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-      <FNALibraryFiles Include="../fnalibs/macos/libFAudio.0.dylib" />
-      <FNALibraryFiles Include="../fnalibs/macos/libFNA3D.0.dylib" />
-      <FNALibraryFiles Include="../fnalibs/macos/libSDL3.0.dylib" />
-      <FNALibraryFiles Include="../fnalibs/macos/libtheorafile.dylib" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-      <FNALibraryFiles Include="../fnalibs/windows/FAudio.dll" />
-      <FNALibraryFiles Include="../fnalibs/windows/FNA3D.dll" />
-      <FNALibraryFiles Include="../fnalibs/windows/SDL3.dll" />
-      <FNALibraryFiles Include="../fnalibs/windows/libtheorafile.dll" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(FNALibraryFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
-  </Target>
 
   <!-- Must be manually invoked using: dotnet msbuild -t:CompileEffects -->
   <Target Name="CompileEffects" Inputs="@(Effects)" Outputs="@(Effects -> 'content/%(RelativeDir)%(Filename).fxb' )">
