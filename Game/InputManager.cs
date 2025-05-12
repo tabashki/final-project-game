@@ -9,39 +9,41 @@ class InputManager
     private GamePadState prevGamepad;
     private GamePadState gamepad;
 
-    public Vector2 MoveInput => GetMoveInput();
+    public bool IsGamepadConnected => gamepad.IsConnected;
+    public Vector2 MoveInput { get; protected set; }
 
-    public Vector2 GetMoveInput()
+    private void UpdateMovementInput()
     {
+        var moveInput = Vector2.Zero;
         if (gamepad.IsConnected)
         {
-            return gamepad.ThumbSticks.Left;
+            moveInput = gamepad.ThumbSticks.Left;
+            moveInput.Y = -moveInput.Y;
         }
         else
         {
-            var move = new Vector2(0);
             if (keyboard.IsKeyDown(Keys.A))
             {
-                move.X -= 1;
+                moveInput.X -= 1;
             }
             if (keyboard.IsKeyDown(Keys.D))
             {
-                move.X += 1;
+                moveInput.X += 1;
             }
             if (keyboard.IsKeyDown(Keys.W))
             {
-                move.Y -= 1;
+                moveInput.Y -= 1;
             }
             if (keyboard.IsKeyDown(Keys.S))
             {
-                move.Y += 1;
+                moveInput.Y += 1;
             }
-            if (move.LengthSquared() != 0)
+            if (moveInput.LengthSquared() > 0)
             {
-                move.Normalize();
+                moveInput.Normalize();
             }
-            return move;
         }
+        MoveInput = moveInput;
     }
 
     public void Update()
@@ -51,6 +53,8 @@ class InputManager
 
         keyboard = Keyboard.GetState();
         gamepad = GamePad.GetState(PlayerIndex.One);
+
+        UpdateMovementInput();
     }
 
     public bool KeyJustPressed(Keys key)
