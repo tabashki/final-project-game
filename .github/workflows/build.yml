@@ -1,10 +1,10 @@
-name: builds
+name: build & publish
 
 on: [push]
 
 jobs:
   build-linux:
-    name: Build (linux 64-bit)
+    name: Build & publish (linux)
     runs-on: [self-hosted, linux]
     env:
       DOTNET_INSTALL_DIR: "./.dotnet"
@@ -18,9 +18,16 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Build
         run: dotnet build
+      - name: Publish
+        run: dotnet publish -o bin/Publish/linux
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-linux
+          path: bin/Publish/linux/
 
   build-windows:
-    name: Build (windows 64-bit)
+    name: Build & publish (windows)
     runs-on: [self-hosted, windows]
     steps:
       - uses: actions/checkout@v4
@@ -28,3 +35,11 @@ jobs:
           submodules: recursive
       - name: Build
         run: dotnet build
+      - name: Publish
+        run: dotnet publish -o bin/Publish/windows
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-windows
+          path: bin/Publish/windows/
+
