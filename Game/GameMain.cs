@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 
+namespace TeamCherry.Project;
+
 class GameMain : Game
 {
     private GraphicsDeviceManager gdm;

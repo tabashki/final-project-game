@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+namespace TeamCherry.Project;
+
 abstract class Entity : IRenderable
 {
     public virtual Texture2D Texture { get; protected set; }

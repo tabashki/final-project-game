@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
+namespace TeamCherry.Project;
+
 class InputManager
 {
     private KeyboardState prevKeyboard;

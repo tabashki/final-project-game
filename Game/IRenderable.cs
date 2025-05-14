@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+namespace TeamCherry.Project;
+
 interface IRenderable
 {
     public Texture2D Texture { get; }

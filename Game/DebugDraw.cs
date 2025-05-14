@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+namespace TeamCherry.Project;
+
 public static class DebugDraw
 {
     const int MAX_VERTS = 2048;

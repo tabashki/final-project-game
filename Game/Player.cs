@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+namespace TeamCherry.Project;
+
 class Player : Entity
 {
     private const float maxVelocity = 100f;

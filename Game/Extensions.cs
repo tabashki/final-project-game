@@ -1,6 +1,8 @@
 
 using Microsoft.Xna.Framework;
 
+namespace TeamCherry.Project;
+
 public static class GameTimeExtensions
 {
     public static float DeltaTime(this GameTime gameTime)

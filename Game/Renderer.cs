@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 
+namespace TeamCherry.Project;
+
 class Renderer : IDisposable
 {
     private GraphicsDevice device;
