@@ -20,7 +20,7 @@ class Renderer : IDisposable
     private static readonly RasterizerState rasterizerState = RasterizerState.CullCounterClockwise;
     private const int viewportScale = 5;
 
-    public List<IRenderable> RenderObjects;
+    public IRenderableObjectsProvider? RenderableProvider { get; set; } = null;
 
     public Renderer(GraphicsDevice graphicsDevice, SpriteFont defaultFont)
     {
@@ -30,7 +30,6 @@ class Renderer : IDisposable
             device.Viewport.Width / viewportScale,
             device.Viewport.Height / viewportScale);
         batch = new SpriteBatch(device);
-        RenderObjects = new List<IRenderable>();
     }
 
     public void Draw(GameTime gameTime)
@@ -38,14 +37,20 @@ class Renderer : IDisposable
         device.SetRenderTarget(renderTarget);
         device.Clear(clearColor);
 
-        batch.Begin(sortMode, blendState, pointClamp, depthStencil, rasterizerState);
-        foreach (var renderable in RenderObjects)
+        if (RenderableProvider != null)
         {
-            batch.Draw(renderable.Texture, renderable.Position, null,
-                renderable.Color,renderable.Rotation, renderable.RotationOrigin,
-                1f, renderable.SpriteEffects, 0);
+            Matrix transform = RenderableProvider.RenderTransform;
+
+            batch.Begin(sortMode, blendState, pointClamp, depthStencil,
+                rasterizerState, null, transform);
+            foreach (var renderable in RenderableProvider.RenderableObjects)
+            {
+                batch.Draw(renderable.Texture, renderable.Position, null,
+                    renderable.Color, renderable.Rotation, renderable.RotationOrigin,
+                    1f, renderable.SpriteEffects, 0);
+            }
+            batch.End();
         }
-        batch.End();
 
         device.SetRenderTarget(null);
 

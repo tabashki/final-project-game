@@ -6,13 +6,17 @@ using System.Diagnostics;
 
 namespace TeamCherry.Project;
 
-class GameMain : Game
+class GameMain : Game, IRenderableObjectsProvider
 {
     private GraphicsDeviceManager gdm;
     private InputManager input;
     private Renderer renderer;
     private Player player;
     private SpriteFont font;
+    private List<Entity> Entites = new();
+
+    public IReadOnlyList<IRenderable> RenderableObjects => Entites.AsReadOnly();
+    public Matrix RenderTransform => Matrix.Identity;
 
     private GameMain()
     {
@@ -39,8 +43,10 @@ class GameMain : Game
 
         font = Content.Load<SpriteFont>("Fonts/Dogica");
         renderer = new Renderer(GraphicsDevice, font);
+        renderer.RenderableProvider = this;
+
         player = new Player(Content.Load<Texture2D>("Sprites/Guy"));
-        renderer.RenderObjects.Add(player);
+        Entites.Add(player);
     }
 
     protected override void UnloadContent()
