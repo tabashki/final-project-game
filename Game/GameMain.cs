@@ -23,6 +23,7 @@ class GameMain : Game, IRenderableObjectsProvider
     {
         // Replace the default ContentManager with our extended version
         gcm = new GameContentManager(Services);
+        gcm.RegisterLoader(new JsonAssetLoader<Player>());
         Content = gcm;
 
         gdm = new GraphicsDeviceManager(this);
@@ -48,7 +49,7 @@ class GameMain : Game, IRenderableObjectsProvider
         renderer = new Renderer(GraphicsDevice, font);
         renderer.RenderableProvider = this;
 
-        player = new Player(Content.Load<Texture2D>("Sprites/Guy"));
+        player = Content.Load<Player>("Entities/Player");
         Entites.Add(player);
     }
 
