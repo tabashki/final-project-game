@@ -8,6 +8,7 @@ namespace TeamCherry.Project;
 
 class GameMain : Game, IRenderableObjectsProvider
 {
+    private GameContentManager gcm;
     private GraphicsDeviceManager gdm;
     private InputManager input;
     private Renderer renderer;
@@ -18,16 +19,18 @@ class GameMain : Game, IRenderableObjectsProvider
     public IReadOnlyList<IRenderable> RenderableObjects => Entites.AsReadOnly();
     public Matrix RenderTransform => Matrix.Identity;
 
-    private GameMain()
+    private GameMain() : base()
     {
+        // Replace the default ContentManager with our extended version
+        gcm = new GameContentManager(Services);
+        Content = gcm;
+
         gdm = new GraphicsDeviceManager(this);
         gdm.PreferredBackBufferWidth = 1280;
         gdm.PreferredBackBufferHeight = 720;
         gdm.SynchronizeWithVerticalRetrace = true;
 
         input = new InputManager();
-
-        Content.RootDirectory = "Content";
     }
 
     protected override void Initialize()
