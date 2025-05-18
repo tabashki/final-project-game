@@ -11,6 +11,8 @@ class Renderer : IDisposable
     private RenderTarget2D renderTarget;
     private SpriteBatch batch;
     private SpriteFont font;
+    public Camera Camera { get; set; }
+    public RenderTarget2D RenderTarget => renderTarget;
 
     private static readonly Color clearColor = new Color(0.4f, 0.4f, 0.4f);
     private static readonly SpriteSortMode sortMode = SpriteSortMode.Deferred;
@@ -42,7 +44,7 @@ class Renderer : IDisposable
             Matrix transform = RenderableProvider.RenderTransform;
 
             batch.Begin(sortMode, blendState, pointClamp, depthStencil,
-                rasterizerState, null, transform);
+                rasterizerState, null, Camera?.GetTransformMatrix() ?? Matrix.Identity);
             foreach (var renderable in RenderableProvider.RenderableObjects)
             {
                 batch.Draw(renderable.Texture, renderable.Position, null,

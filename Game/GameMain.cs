@@ -14,6 +14,7 @@ class GameMain : Game, IRenderableObjectsProvider
     private Player player;
     private SpriteFont font;
     private List<Entity> Entites = new();
+    private Camera camera;
 
     public IReadOnlyList<IRenderable> RenderableObjects => Entites.AsReadOnly();
     public Matrix RenderTransform => Matrix.Identity;
@@ -47,6 +48,10 @@ class GameMain : Game, IRenderableObjectsProvider
 
         player = new Player(Content.Load<Texture2D>("Sprites/Guy"));
         Entites.Add(player);
+
+        camera = new Camera(renderer.RenderTarget.Width, renderer.RenderTarget.Height);
+        camera.Zoom = 0.25f; // camera size
+        renderer.Camera = camera;
     }
 
     protected override void UnloadContent()
@@ -76,6 +81,10 @@ class GameMain : Game, IRenderableObjectsProvider
 
         player.SetMoveInput(input.MoveInput);
         player.Update(gameTime);
+
+        // Make camera follow the player's center
+        var playerCenter = player.Position + new Vector2(player.Texture.Width / 2f, player.Texture.Height / 2f);
+        camera.Follow(playerCenter);
 
         DebugUpdate(gameTime);
         base.Update(gameTime);
