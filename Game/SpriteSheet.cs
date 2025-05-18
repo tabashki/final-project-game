@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Diagnostics;
+using TeamCherry.Project;
 
 public class SpriteSheet
 {
@@ -53,6 +54,21 @@ public class SpriteSheet
         }
 
         Debug.WriteLine($"SpriteSheet initialized: {sourceRectangles.Length} frame(s), {columns} col x {rows} row");
+    }
+
+
+    public SpriteSheet(Texture2D texture, AsepriteData data)
+    {
+        this.texture = texture;
+        sourceRectangles = data.Frames.Select(f => f.Frame).ToArray();
+        Debug.WriteLine($"SpriteSheet created with {sourceRectangles.Length} frames from AsepriteData.");
+    }
+
+    public SpriteSheet(Texture2D texture, Rectangle[] sourceRectangles)
+    {
+        this.texture = texture;
+        this.sourceRectangles = sourceRectangles;
+        Debug.WriteLine($"SpriteSheet created with {sourceRectangles.Length} frames from JSON rectangles.");
     }
 
     public int FrameCount => sourceRectangles.Length;

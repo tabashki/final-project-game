@@ -68,6 +68,19 @@ class GameMain : Game, IRenderableObjectsProvider
         Maps.Add(tilemap);
         
         player = Content.Load<Player>("Entities/Player");
+        Texture2D playerTexture = Content.Load<Texture2D>("Sprites/Knight");
+               
+        AsepriteData data = AsepriteLoader.LoadAsepriteData("Content/Json/spritesheet.json");
+                
+        SpriteSheet playerSheet_ = new SpriteSheet(playerTexture, data);
+
+        string json = File.ReadAllText("Content/Sprites/spritesheet.json");
+        Rectangle[] sourceRects = AsepriteSheet.LoadSourceRects(json);
+
+        SpriteSheet playerSheet = new SpriteSheet(playerTexture, sourceRects);
+
+        player = new Player(playerTexture, playerSheet);
+
         Entites.Add(player);
 
         camera = new Camera(renderer.ViewportDimensions);
