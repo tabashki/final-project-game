@@ -31,6 +31,11 @@
     <Effects Include="Effects/DebugDraw.fx" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json.Schema" Version="4.0.1" />
+  </ItemGroup>
+
   <!-- Must be manually invoked using: dotnet msbuild -t:CompileEffects -->
   <Target Name="CompileEffects" Inputs="@(Effects)" Outputs="@(Effects -> 'content/%(RelativeDir)%(Filename).fxb' )">
     <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
@@ -45,7 +50,7 @@
       <Fxc>Tools/fxc.exe</Fxc>
     </PropertyGroup>
 
-    <MakeDir Directories="$(IntermediateOutputPath)%(Effects.RelativeDir)"/>
+    <MakeDir Directories="$(IntermediateOutputPath)%(Effects.RelativeDir)" />
     <Exec Command="$(Fxc) /nologo /Vd /T fx_2_0 /Fo &quot;content/%(Effects.RelativeDir)%(Effects.Filename).fxb&quot; &quot;%(Effects.Identity)&quot;" />
   </Target>
 
