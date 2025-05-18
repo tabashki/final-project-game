@@ -1,4 +1,5 @@
 
+using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -6,14 +7,18 @@ namespace TeamCherry.Project;
 
 class Player : Entity
 {
-    private const float maxVelocity = 100f;
+    [JsonInclude]
+    public float MaxSpeed { get; private set; } = 100f;
+
     private Vector2 targetVelocity = Vector2.Zero;
     private Vector2 moveInput = Vector2.Zero;
     private bool flipHoriz = false;
 
     public virtual SpriteEffects SpriteEffects => (flipHoriz) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
-    public Player(Texture2D texture) : base(texture) {}
+    protected Player() { }
+
+    public Player(Texture2D texture) : base(texture) { }
 
     public void SetMoveInput(Vector2 input)
     {
@@ -32,7 +37,7 @@ class Player : Entity
         const float speed = 12;
         float t = MathF.Min(speed * deltaTime, 1);
 
-        targetVelocity = moveInput * maxVelocity;
+        targetVelocity = moveInput * MaxSpeed;
         Velocity = Vector2.Lerp(Velocity, targetVelocity, t);
 
         if (Velocity.LengthSquared() < epsilonSq)
