@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace TeamCherry.Project;
 
@@ -19,6 +20,9 @@ public class Player : Entity
     private float animationSpeed = 0.1f; // Seconds per frame
 
     private SpriteSheet? spriteSheet;
+
+    private bool isAttacking = false;
+    private MouseState previousMouse;
 
     [JsonInclude]
     public int SpriteIndex { get; set; } = 0;
@@ -65,6 +69,19 @@ public class Player : Entity
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+        MouseState currentMouse = Mouse.GetState();
+        bool mouseJustPressed = currentMouse.LeftButton == ButtonState.Pressed &&
+                                previousMouse.LeftButton == ButtonState.Released;
+
+        if (mouseJustPressed && !isAttacking)
+        {
+            isAttacking = true;
+            currentFrame = 0;
+            animationTimer = 0f;
+            if (attackFrames != null && attackFrames.Length > 0)
+                Texture = attackFrames[0];
+        }
+
         // Basic movement
         const float epsilonSq = 0.01f;
         const float speed = 12;
@@ -88,15 +105,25 @@ public class Player : Entity
 
         Position += Velocity * deltaTime;
 
-        // Animate attack frames
-        if (attackFrames != null && attackFrames.Length > 0)
+        // Animate attack sequence
+        if (isAttacking && attackFrames != null && attackFrames.Length > 0)
         {
             animationTimer += deltaTime;
             if (animationTimer >= animationSpeed)
             {
                 animationTimer = 0f;
-                currentFrame = (currentFrame + 1) % attackFrames.Length;
-                Texture = attackFrames[currentFrame];
+                currentFrame++;
+
+                if (currentFrame >= attackFrames.Length)
+                {
+                    isAttacking = false;
+                    currentFrame = 0;
+                    Texture = attackFrames[0]; // idle frame
+                }
+                else
+                {
+                    Texture = attackFrames[currentFrame];
+                }
             }
         }
 
@@ -113,6 +140,7 @@ public class Player : Entity
             DebugDraw.Rect(BoundingBox, Color.Yellow);
         }
 
+        previousMouse = currentMouse;
         base.Update(gameTime);
     }
 }
