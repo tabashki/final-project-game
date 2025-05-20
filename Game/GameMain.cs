@@ -69,23 +69,28 @@ class GameMain : Game, IRenderableObjectsProvider
         
         player = Content.Load<Player>("Entities/Player");
         Texture2D playerTexture = Content.Load<Texture2D>("Sprites/Knight");
-               
-        AsepriteData data = AsepriteLoader.LoadAsepriteData("Content/Json/spritesheet.json");
-                
-        SpriteSheet playerSheet_ = new SpriteSheet(playerTexture, data);
-
-        string json = File.ReadAllText("Content/Sprites/spritesheet.json");
+        string json = File.ReadAllText("Content/Json/spritesheet.json");
         Rectangle[] sourceRects = AsepriteSheet.LoadSourceRects(json);
-
         SpriteSheet playerSheet = new SpriteSheet(playerTexture, sourceRects);
 
-        player = new Player(playerTexture, playerSheet);
+        // Load attack animation frames
+        Texture2D[] attackFrames = new Texture2D[14];
+        for (int i = 0; i < 14; i++)
+        {
+            string name = $"Sprites/Knight-Attack_{i.ToString("D2")}";
+            attackFrames[i] = Content.Load<Texture2D>(name);
+        }
 
+        // Initialize player with idle + attack animation
+        player = new Player(playerTexture, playerSheet, attackFrames);
+        player.Texture = attackFrames[0];
         Entites.Add(player);
 
         camera = new Camera(renderer.ViewportDimensions);
         camera.Follow(player);
     }
+
+
 
     protected override void UnloadContent()
     {

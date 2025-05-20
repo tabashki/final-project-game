@@ -38,7 +38,7 @@ public class SpriteSheet
 
         if (totalFrames == 0)
         {
-            // Fallback frame: full texture
+           
             sourceRectangles[0] = new Rectangle(0, 0, texWidth, texHeight);
         }
         else

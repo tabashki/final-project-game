@@ -2,11 +2,19 @@
 using Newtonsoft.Json;
 using TeamCherry.Project;
 
-public static class AsepriteLoader
+namespace TeamCherry.Project
 {
-    public static AsepriteData LoadAsepriteData(string jsonPath)
+    public class AsepriteLoader : IAssetLoader
     {
-        string json = File.ReadAllText(jsonPath);
-        return JsonConvert.DeserializeObject<AsepriteData>(json);
+        public Type AssetType => typeof(AsepriteSheet);
+
+        public string[] SupportedExtensions => new[] { ".json" };
+
+        public object LoadFromStream(Stream stream, GameContentManager contentManager)
+        {
+            using var reader = new StreamReader(stream);
+            string json = reader.ReadToEnd();
+            return JsonConvert.DeserializeObject<AsepriteSheet>(json);
+        }
     }
 }

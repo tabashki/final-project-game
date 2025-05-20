@@ -1,7 +1,7 @@
 
 namespace TeamCherry.Project;
 
-interface IAssetLoader
+public interface IAssetLoader
 {
     public Type AssetType { get; }
     // When true, forces the content manager to always load a fresh instance of this asset instead
