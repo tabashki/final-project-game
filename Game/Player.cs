@@ -30,6 +30,10 @@ public class Player : Entity
     public override SpriteEffects SpriteEffects => flipHoriz ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
     public override Rectangle? SourceRectangle => spriteSheet?.GetFrame(SpriteIndex);
 
+    // Camera toggle state
+    private static Camera2D? camera;
+    private static bool cameraTogglePressedLastFrame = false;
+
     // Parameterless constructor for deserialization
     public Player() : base(null) { }
 
@@ -69,6 +73,26 @@ public class Player : Entity
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+        // === Handle Camera Toggle ===
+        var keyboard = Keyboard.GetState();
+        bool toggleCamera = keyboard.IsKeyDown(Keys.C);
+
+        if (toggleCamera && !cameraTogglePressedLastFrame)
+        {
+            if (camera == null)
+                camera = new Camera2D(200, 100);  // You can customize this size
+
+            camera.IsEnabled = !camera.IsEnabled;
+        }
+
+        cameraTogglePressedLastFrame = toggleCamera;
+
+        if (camera != null && camera.IsEnabled)
+        {
+            camera.Update(Position);
+        }
+
+        // === Attack Handling ===
         MouseState currentMouse = Mouse.GetState();
         bool mouseJustPressed = currentMouse.LeftButton == ButtonState.Pressed &&
                                 previousMouse.LeftButton == ButtonState.Released;
@@ -82,7 +106,7 @@ public class Player : Entity
                 Texture = attackFrames[0];
         }
 
-        // Basic movement
+        // === Movement ===
         const float epsilonSq = 0.01f;
         const float speed = 12;
         float t = MathF.Min(speed * deltaTime, 1);
@@ -105,7 +129,7 @@ public class Player : Entity
 
         Position += Velocity * deltaTime;
 
-        // Animate attack sequence
+        // === Animate attack sequence ===
         if (isAttacking && attackFrames != null && attackFrames.Length > 0)
         {
             animationTimer += deltaTime;
@@ -127,7 +151,7 @@ public class Player : Entity
             }
         }
 
-        // Debug visuals
+        // === Debug Visuals ===
         if (Texture != null)
         {
             Vector2 center = Position + new Vector2(
@@ -140,7 +164,15 @@ public class Player : Entity
             DebugDraw.Rect(BoundingBox, Color.Yellow);
         }
 
+        if (camera != null && camera.IsEnabled)
+        {
+            DebugDraw.Rect(camera.GetViewRectangle(), Color.Red);
+        }
+
         previousMouse = currentMouse;
         base.Update(gameTime);
     }
+
+    // Expose camera transform to use in Game1.cs
+    public static Matrix GetCameraTransform() => camera?.GetTransform() ?? Matrix.Identity;
 }
