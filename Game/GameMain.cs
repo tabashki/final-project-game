@@ -33,7 +33,7 @@ class GameMain : Game, IRenderableObjectsProvider
     
     private GameMain() : base()
     {
-        // Replace the default ContentManager with our extended version
+       
         gcm = new GameContentManager(Services);
         gcm.RegisterLoader(new JsonAssetLoader<Player>(true));
         gcm.RegisterLoader(new TiledAssetLoader());

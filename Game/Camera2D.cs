@@ -9,7 +9,7 @@ public class Camera2D
     public int ViewHeight { get; }
     public bool IsEnabled { get; set; }
 
-    private float followLerp = 0.1f; // Smooth follow factor
+    private float followLerp = 0.1f; // follow factor
 
     public Camera2D(int viewWidth, int viewHeight, float followLerp = 0.1f)
     {

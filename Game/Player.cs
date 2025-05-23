@@ -80,7 +80,7 @@ public class Player : Entity
         if (toggleCamera && !cameraTogglePressedLastFrame)
         {
             if (camera == null)
-                camera = new Camera2D(200, 100);  // You can customize this size
+                camera = new Camera2D(200, 100);  // camera size
 
             camera.IsEnabled = !camera.IsEnabled;
         }
@@ -173,6 +173,6 @@ public class Player : Entity
         base.Update(gameTime);
     }
 
-    // Expose camera transform to use in Game1.cs
+    
     public static Matrix GetCameraTransform() => camera?.GetTransform() ?? Matrix.Identity;
 }
