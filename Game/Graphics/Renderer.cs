@@ -38,9 +38,10 @@ class Renderer : IDisposable
         device.SetRenderTarget(renderTarget);
         device.Clear(clearColor);
 
+        Matrix transform = Matrix.Identity;
         if (RenderableProvider != null)
         {
-            Matrix transform = RenderableProvider.RenderTransform;
+            transform = RenderableProvider.RenderTransform;
 
             batch.Begin(sortMode, blendState, pointClamp, depthStencil,
                 rasterizerState, null, transform);
@@ -64,7 +65,11 @@ class Renderer : IDisposable
         batch.Draw(renderTarget, rect, Color.White);
         batch.End();
 
-        DebugDraw.DrawToDevice(device, viewportScale, gameTime.DeltaTime());
+        Matrix debugTransform = transform;
+        debugTransform *= Matrix.CreateScale(new Vector3(2f / renderTarget.Width, -2f / renderTarget.Height, 1));
+        debugTransform *= Matrix.CreateTranslation(new Vector3(-1, 1, 0));
+
+        DebugDraw.DrawToDevice(device, debugTransform, gameTime.DeltaTime());
     }
 
     public void Dispose()
