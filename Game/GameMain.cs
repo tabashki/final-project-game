@@ -69,6 +69,7 @@ class GameMain : Game, IRenderableObjectsProvider
         
         player = Content.Load<Player>("Entities/Player");
         Texture2D playerTexture = Content.Load<Texture2D>("Sprites/Knight");
+        //Texture2D spriteSheet = Content.Load<Texture2D>("Sprites/Knight-Walk_00-sheet");  -- use for a single spread shit
         string json = File.ReadAllText("Content/Json/spritesheet.json");
         Rectangle[] sourceRects = AsepriteSheet.LoadSourceRects(json);
         SpriteSheet playerSheet = new SpriteSheet(playerTexture, sourceRects);
