@@ -17,7 +17,7 @@ class GameMain : Game, IRenderableObjectsProvider
     private Camera camera;
 
     public IReadOnlyList<IRenderable> RenderableObjects => Entites.AsReadOnly();
-    public Matrix RenderTransform => Matrix.Identity;
+    public Matrix RenderTransform => camera.GetTransformMatrix();
 
     private GameMain()
     {
@@ -49,9 +49,8 @@ class GameMain : Game, IRenderableObjectsProvider
         player = new Player(Content.Load<Texture2D>("Sprites/Guy"));
         Entites.Add(player);
 
-        camera = new Camera(renderer.RenderTarget.Width, renderer.RenderTarget.Height);
-        camera.Zoom = 0.25f; // camera size
-        renderer.Camera = camera;
+        camera = new Camera(renderer.ViewportDimensions );
+        camera.Zoom = 2f; // camera size
     }
 
     protected override void UnloadContent()

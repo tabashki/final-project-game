@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 
 namespace TeamCherry.Project;
 
 class Camera
 {
     private Vector2 position;
-    private readonly int viewportWidth;
-    private readonly int viewportHeight;
+    private Vector2 viewportDimensions;
 
     private float zoom = 1f;
     public float Zoom
@@ -15,11 +15,9 @@ class Camera
         set => zoom = MathHelper.Clamp(value, 0.1f, 20f);
     }
 
-    public Camera(int viewportWidth, int viewportHeight)
+    public Camera(Vector2 viewportDims)
     {
-        this.viewportWidth = viewportWidth;
-        this.viewportHeight = viewportHeight;
-        Zoom = 10f;
+        this.viewportDimensions = viewportDims;
     }
 
     public void Follow(Vector2 targetCenter)
@@ -29,10 +27,10 @@ class Camera
 
     public Matrix GetTransformMatrix()
     {
-        var scale = Matrix.CreateScale(Zoom); 
-        var translate = Matrix.CreateTranslation(position.X, position.Y, 0); 
-        var offset = Matrix.CreateTranslation(viewportWidth / 2f, viewportHeight / 2f, 0); 
-        return translate * scale * offset;
+        var matrix = Matrix.CreateTranslation(new Vector3(-position, 0));
+        matrix *= Matrix.CreateScale(new Vector3(zoom, zoom, 1));
+        matrix *= Matrix.CreateTranslation(new Vector3(viewportDimensions / 2f, 0));
+        return matrix;
     }
 
 }
