@@ -42,14 +42,21 @@ class Renderer : IDisposable
         if (RenderableProvider != null)
         {
             transform = RenderableProvider.RenderTransform;
+            Matrix inverseTransform = Matrix.Invert(transform);
+
+            Vector2 topLeft = Vector2.Transform(Vector2.Zero, inverseTransform);
+            Vector2 bottomRight = Vector2.Transform(ViewportDimensions, inverseTransform);
+            
+            Rectangle viewport = new Rectangle();
+            viewport.Location = new Point((int)topLeft.X, (int)topLeft.Y);
+            viewport.Height = (int)MathF.Abs(MathF.Ceiling(bottomRight.Y - topLeft.Y));
+            viewport.Width = (int)MathF.Abs(MathF.Ceiling(bottomRight.X - topLeft.X));
 
             batch.Begin(sortMode, blendState, pointClamp, depthStencil,
                 rasterizerState, null, transform);
             foreach (var renderable in RenderableProvider.RenderableObjects)
             {
-                batch.Draw(renderable.Texture, renderable.Position, null,
-                    renderable.Color, renderable.Rotation, renderable.RotationOrigin,
-                    1f, renderable.SpriteEffects, 0);
+                renderable.DrawBatched(batch, viewport);
             }
             batch.End();
         }
