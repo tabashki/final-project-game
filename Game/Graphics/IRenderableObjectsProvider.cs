@@ -5,6 +5,6 @@ namespace TeamCherry.Project;
 
 interface IRenderableObjectsProvider
 {
-    public IReadOnlyList<IBatchRenderable> RenderableObjects { get; }
+    public IReadOnlyList<IBatchedRenderable> RenderableObjects { get; }
     public Matrix RenderTransform { get; }
 }

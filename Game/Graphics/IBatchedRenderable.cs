@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TeamCherry.Project;
 
-interface IBatchRenderable
+interface IBatchedRenderable
 {
-    public void DrawBatched(SpriteBatch spriteBatch, Rectangle viewport);
+    public void DrawBatched(SpriteBatch spriteBatch, Rectangle visibleRegion);
 }

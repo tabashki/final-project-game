@@ -22,6 +22,39 @@ class Renderer : IDisposable
 
     public IRenderableObjectsProvider? RenderableProvider { get; set; } = null;
     public Vector2 ViewportDimensions => new Vector2(renderTarget.Width, renderTarget.Height);
+    
+    /// <summary>
+    /// Returns an AABB covering the visible viewport region for the given view transform 
+    /// </summary>
+    private Rectangle CalculateVisibleRegion(Matrix transform)
+    {
+        Matrix inverseTransform = Matrix.Invert(transform);
+
+        Vector2 topLeft = Vector2.Transform(Vector2.Zero, inverseTransform);
+        Vector2 bottomRight = topLeft;
+        
+        var otherCorners = new Vector2[] {
+            Vector2.Transform(new Vector2(ViewportDimensions.X, 0), inverseTransform),
+            Vector2.Transform(ViewportDimensions, inverseTransform),
+            Vector2.Transform(new Vector2(0, ViewportDimensions.Y), inverseTransform),
+        };
+        
+        foreach (var corner in otherCorners)
+        {
+            topLeft.X = MathF.Floor(MathF.Min(topLeft.X, corner.X));
+            topLeft.Y = MathF.Floor(MathF.Min(topLeft.Y, corner.Y));
+            
+            bottomRight.X = MathF.Ceiling(MathF.Max(bottomRight.X, corner.X));
+            bottomRight.Y = MathF.Ceiling(MathF.Max(bottomRight.Y, corner.Y));
+        }
+
+        Vector2 dimensions = (bottomRight - topLeft);
+        dimensions.X = MathF.Ceiling(dimensions.X);
+        dimensions.Y = MathF.Ceiling(dimensions.Y);
+        
+        return new Rectangle((int)topLeft.X, (int)topLeft.Y, 
+            (int)dimensions.X, (int)dimensions.Y);
+    }
 
     public Renderer(GraphicsDevice graphicsDevice, SpriteFont defaultFont)
     {
@@ -42,21 +75,15 @@ class Renderer : IDisposable
         if (RenderableProvider != null)
         {
             transform = RenderableProvider.RenderTransform;
-            Matrix inverseTransform = Matrix.Invert(transform);
-
-            Vector2 topLeft = Vector2.Transform(Vector2.Zero, inverseTransform);
-            Vector2 bottomRight = Vector2.Transform(ViewportDimensions, inverseTransform);
             
-            Rectangle viewport = new Rectangle();
-            viewport.Location = new Point((int)topLeft.X, (int)topLeft.Y);
-            viewport.Height = (int)MathF.Abs(MathF.Ceiling(bottomRight.Y - topLeft.Y));
-            viewport.Width = (int)MathF.Abs(MathF.Ceiling(bottomRight.X - topLeft.X));
+            var visibleRegion = CalculateVisibleRegion(transform);
+            DebugDraw.Rect(visibleRegion, Color.Red);
 
             batch.Begin(sortMode, blendState, pointClamp, depthStencil,
                 rasterizerState, null, transform);
             foreach (var renderable in RenderableProvider.RenderableObjects)
             {
-                renderable.DrawBatched(batch, viewport);
+                renderable.DrawBatched(batch, visibleRegion);
             }
             batch.End();
         }

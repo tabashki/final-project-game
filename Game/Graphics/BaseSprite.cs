@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TeamCherry.Project;
 
-public abstract class BaseSprite : IBatchRenderable
+public abstract class BaseSprite : IBatchedRenderable
 {
     public Texture2D Texture { get; protected set; }
     public Vector2 Position { get; protected set; } = Vector2.Zero;
