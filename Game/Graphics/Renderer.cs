@@ -21,6 +21,7 @@ class Renderer : IDisposable
     private const int viewportScale = 5;
 
     public IRenderableObjectsProvider? RenderableProvider { get; set; } = null;
+    public Vector2 ViewportDimensions => new Vector2(renderTarget.Width, renderTarget.Height);
 
     public Renderer(GraphicsDevice graphicsDevice, SpriteFont defaultFont)
     {

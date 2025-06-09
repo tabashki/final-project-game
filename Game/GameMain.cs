@@ -15,9 +15,10 @@ class GameMain : Game, IRenderableObjectsProvider
     private Player player;
     private SpriteFont font;
     private List<Entity> Entites = new();
+    private Camera camera;
 
     public IReadOnlyList<IRenderable> RenderableObjects => Entites.AsReadOnly();
-    public Matrix RenderTransform => Matrix.Identity;
+    public Matrix RenderTransform => camera.GetTransformMatrix();
 
     private GameMain() : base()
     {
@@ -51,6 +52,9 @@ class GameMain : Game, IRenderableObjectsProvider
 
         player = Content.Load<Player>("Entities/Player");
         Entites.Add(player);
+
+        camera = new Camera(renderer.ViewportDimensions);
+        camera.Follow(player);
     }
 
     protected override void UnloadContent()
@@ -80,6 +84,8 @@ class GameMain : Game, IRenderableObjectsProvider
 
         player.SetMoveInput(input.MoveInput);
         player.Update(gameTime);
+
+        camera.Update(gameTime);
 
         DebugUpdate(gameTime);
         base.Update(gameTime);
