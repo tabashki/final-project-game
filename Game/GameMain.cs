@@ -49,8 +49,8 @@ class GameMain : Game, IRenderableObjectsProvider
         player = new Player(Content.Load<Texture2D>("Sprites/Guy"));
         Entites.Add(player);
 
-        camera = new Camera(renderer.ViewportDimensions );
-        camera.Zoom = 2f; // camera size
+        camera = new Camera(renderer.ViewportDimensions);
+        camera.Follow(player);
     }
 
     protected override void UnloadContent()
@@ -81,9 +81,7 @@ class GameMain : Game, IRenderableObjectsProvider
         player.SetMoveInput(input.MoveInput);
         player.Update(gameTime);
 
-        // Make camera follow the player's center
-        var playerCenter = player.Position + new Vector2(player.Texture.Width / 2f, player.Texture.Height / 2f);
-        camera.Follow(playerCenter);
+        camera.Update(gameTime);
 
         DebugUpdate(gameTime);
         base.Update(gameTime);

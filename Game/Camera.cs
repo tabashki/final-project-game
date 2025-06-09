@@ -7,6 +7,8 @@ class Camera
 {
     private Vector2 position;
     private Vector2 viewportDimensions;
+    private Entity? follow = null;
+    
 
     private float zoom = 1f;
     public float Zoom
@@ -20,9 +22,23 @@ class Camera
         this.viewportDimensions = viewportDims;
     }
 
-    public void Follow(Vector2 targetCenter)
+    public void Follow(Entity targetEntity)
+    { 
+        follow = targetEntity;
+    }
+
+    public void Unfollow()
     {
-        position = targetCenter;
+        follow = null;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        if (follow != null) 
+        {
+            var halfWidth = new Vector2(follow.BoundingBox.Width, follow.BoundingBox.Height) / 2f;
+            position = follow.Position + halfWidth;
+        }
     }
 
     public Matrix GetTransformMatrix()
