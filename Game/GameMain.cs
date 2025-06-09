@@ -17,7 +17,7 @@ class GameMain : Game, IRenderableObjectsProvider
     private List<Entity> Entites = new();
     private Camera camera;
 
-    public IReadOnlyList<IRenderable> RenderableObjects => Entites.AsReadOnly();
+    public IReadOnlyList<IBatchedRenderable> RenderableObjects => Entites.AsReadOnly();
     public Matrix RenderTransform => camera.GetTransformMatrix();
 
     private GameMain() : base()

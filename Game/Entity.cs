@@ -5,15 +5,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TeamCherry.Project;
 
-abstract class Entity : IRenderable
+abstract class Entity : BaseSprite
 {
-    [JsonInclude]
-    public virtual Texture2D Texture { get; protected set; }
-    [JsonInclude]
-    public virtual Color Color { get; protected set; } = Color.White;
-
-    public virtual Vector2 Position { get; protected set; } = Vector2.Zero;
     public virtual Vector2 Velocity { get; protected set; } = Vector2.Zero;
+    
     public virtual Rectangle BoundingBox {
         get {
             var r = Texture.Bounds;
@@ -23,12 +18,9 @@ abstract class Entity : IRenderable
             return r;
         }
     }
-
-    protected Entity() { }
-
-    public Entity(Texture2D texture)
+    
+    public Entity(Texture2D texture) : base(texture)
     {
-        Texture = texture;
     }
 
     public virtual void Update(GameTime gameTime)

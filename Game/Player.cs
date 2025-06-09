@@ -12,11 +12,6 @@ class Player : Entity
 
     private Vector2 targetVelocity = Vector2.Zero;
     private Vector2 moveInput = Vector2.Zero;
-    private bool flipHoriz = false;
-
-    public virtual SpriteEffects SpriteEffects => (flipHoriz) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-
-    protected Player() { }
 
     public Player(Texture2D texture) : base(texture) { }
 
@@ -44,7 +39,15 @@ class Player : Entity
         {
             Velocity = Vector2.Zero;
         }
-        flipHoriz = Velocity.X < 0;
+
+        if (Velocity.X < 0)
+        {
+            SpriteEffects = SpriteEffects.FlipHorizontally;
+        }
+        else if (Velocity.X > 0)
+        {
+            SpriteEffects = SpriteEffects.None;
+        }
 
         Vector2 center = Position + new Vector2(Texture.Width / 2f, Texture.Height / 2f);
         DebugDraw.Arrow(center, center + moveInput * 20, 3, Color.Blue);
