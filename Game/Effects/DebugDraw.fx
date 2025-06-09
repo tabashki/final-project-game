@@ -6,7 +6,7 @@
 
 BEGIN_CONSTANTS
 
-float2 ViewportRcpDims  _vs(c0) _cb(c0);
+float4x4 ViewportTransform  _vs(c0) _cb(c0);
 
 END_CONSTANTS
 
@@ -14,9 +14,8 @@ END_CONSTANTS
 void VSDebugDraw(inout float4 color    : COLOR0,
                  inout float4 position : SV_Position)
 {
-    float2 screenPos = position.xy * ViewportRcpDims * 2 - 1;
-    screenPos.y = -screenPos.y;
-    position.xy = screenPos;
+    float4 pos = float4(position.xyz, 1);
+    position = mul(pos, ViewportTransform);
 }
 
 float4 PSDebugDraw(float4 color : COLOR0) : SV_Target0

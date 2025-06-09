@@ -113,7 +113,7 @@ public static class DebugDraw
     }
 
     [Conditional("DEBUG")]
-    public static void DrawToDevice(GraphicsDevice device, float viewportScale, float deltaTime)
+    public static void DrawToDevice(GraphicsDevice device, Matrix viewportTransform, float deltaTime)
     {
         if (Enabled)
         {
@@ -122,10 +122,7 @@ public static class DebugDraw
                 var vb = new DynamicVertexBuffer(device, typeof(VertexPositionColor), vertexCount, BufferUsage.WriteOnly);
                 vb.SetData(vertices, 0, vertexCount);
 
-                var viewportDims = new Vector2(
-                    viewportScale / device.Viewport.Width, viewportScale / device.Viewport.Height
-                );
-                debugDrawEffect.Parameters["ViewportRcpDims"].SetValue(viewportDims);
+                debugDrawEffect.Parameters["ViewportTransform"].SetValue(viewportTransform);
 
                 device.BlendState = BlendState.AlphaBlend;
                 device.SamplerStates[0] = SamplerState.LinearWrap;
