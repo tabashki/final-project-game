@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using System.Data;
 
 namespace TeamCherry.Project;
 
@@ -12,19 +13,30 @@ class GameMain : Game, IRenderableObjectsProvider
     private GraphicsDeviceManager gdm;
     private InputManager input;
     private Renderer renderer;
+    private TileMap tilemap;
     private Player player;
     private SpriteFont font;
+    private List<TileMap> Maps = new();
     private List<Entity> Entites = new();
     private Camera camera;
 
-    public IReadOnlyList<IBatchedRenderable> RenderableObjects => Entites.AsReadOnly();
+    public IReadOnlyList<IBatchedRenderable> RenderableObjects => CreateRenderList();
     public Matrix RenderTransform => camera.GetTransformMatrix();
 
+    private IReadOnlyList<IBatchedRenderable> CreateRenderList()
+    {
+        List<IBatchedRenderable> lst = new();
+        lst.AddRange(Maps);
+        lst.AddRange(Entites);
+        return lst.AsReadOnly();
+    }
+    
     private GameMain() : base()
     {
         // Replace the default ContentManager with our extended version
         gcm = new GameContentManager(Services);
         gcm.RegisterLoader(new JsonAssetLoader<Player>());
+        gcm.RegisterLoader(new TiledAssetLoader());
         Content = gcm;
 
         gdm = new GraphicsDeviceManager(this);
@@ -50,6 +62,11 @@ class GameMain : Game, IRenderableObjectsProvider
         renderer = new Renderer(GraphicsDevice, font);
         renderer.RenderableProvider = this;
 
+        // tilemap = Content.Load<TileMap>("Maps/Draft1");
+        tilemap = Content.Load<TileMap>("Maps/TestingMultipleTilesets");
+        DebugDraw.Text($"{tilemap.PrintShort()}", Color.Aqua, float.PositiveInfinity);
+        Maps.Add(tilemap);
+        
         player = Content.Load<Player>("Entities/Player");
         Entites.Add(player);
 
