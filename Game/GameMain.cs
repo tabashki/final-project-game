@@ -16,6 +16,7 @@ class GameMain : Game, IRenderableObjectsProvider
     private SpriteFont font;
     private List<Entity> Entites = new();
     private Camera camera;
+    private GameStateManager stateManager;
 
     public IReadOnlyList<IBatchedRenderable> RenderableObjects => Entites.AsReadOnly();
     public Matrix RenderTransform => camera.GetTransformMatrix();
@@ -33,6 +34,7 @@ class GameMain : Game, IRenderableObjectsProvider
         gdm.SynchronizeWithVerticalRetrace = true;
 
         input = new InputManager();
+        stateManager = new GameStateManager(Content);
     }
 
     protected override void Initialize()
@@ -55,10 +57,13 @@ class GameMain : Game, IRenderableObjectsProvider
 
         camera = new Camera(renderer.ViewportDimensions);
         camera.Follow(player);
+        
+        stateManager.PushState(new PlayingGameState());
     }
 
     protected override void UnloadContent()
     {
+        stateManager.PopState();
         renderer.Dispose();
         base.UnloadContent();
     }
@@ -86,6 +91,7 @@ class GameMain : Game, IRenderableObjectsProvider
         player.Update(gameTime);
 
         camera.Update(gameTime);
+        stateManager.Update(gameTime);
 
         DebugUpdate(gameTime);
         base.Update(gameTime);
