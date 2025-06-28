@@ -33,7 +33,6 @@ class GameMain : Game, IRenderableObjectsProvider
     
     private GameMain() : base()
     {
-       
         gcm = new GameContentManager(Services);
         gcm.RegisterLoader(new JsonAssetLoader<Player>(true));
         gcm.RegisterLoader(new TiledAssetLoader());
@@ -53,15 +52,15 @@ class GameMain : Game, IRenderableObjectsProvider
         base.Initialize();
     }
 
-    protected override void LoadContent()
-    {
-        base.LoadContent();
-        DebugDraw.Init(Content, GraphicsDevice);
-        DebugDraw.Text($"use tilde (~) to toggle debug draw", Color.LightBlue, float.PositiveInfinity);
+protected override void LoadContent()
+{
+    base.LoadContent();
+    DebugDraw.Init(Content, GraphicsDevice);
+    DebugDraw.Text($"use tilde (~) to toggle debug draw", Color.LightBlue, float.PositiveInfinity);
 
-        font = Content.Load<SpriteFont>("Fonts/Dogica");
-        renderer = new Renderer(GraphicsDevice, font);
-        renderer.RenderableProvider = this;
+    font = Content.Load<SpriteFont>("Fonts/Dogica");
+    renderer = new Renderer(GraphicsDevice, font);
+    renderer.RenderableProvider = this;
 
         tilemap = Content.Load<TileMap>("Maps/TestingMultipleTilesets");
         DebugDraw.Text($"Loaded tilemap: {tilemap.PrintShort()}", Color.Aqua, 4f);
@@ -74,13 +73,9 @@ class GameMain : Game, IRenderableObjectsProvider
         Rectangle[] sourceRects = AsepriteSheet.LoadSourceRects(json);
         SpriteSheet playerSheet = new SpriteSheet(playerTexture, sourceRects);
 
-        // Load attack animation frames
-        Texture2D[] attackFrames = new Texture2D[14];
-        for (int i = 0; i < 14; i++)
-        {
-            string name = $"Sprites/Knight-Attack_{i.ToString("D2")}";
-            attackFrames[i] = Content.Load<Texture2D>(name);
-        }
+    // === Load attack animation (14 columns × 1 rows) === 
+    Texture2D attackSpriteSheet = Content.Load<Texture2D>("Sprites/KnightAttack");
+    AnimatedSprite attackAnimation = new AnimatedSprite(attackSpriteSheet, cols: 14, rows: 1, fps: 28, loop: false);
 
         // Initialize player with idle + attack animation
         player = new Player(playerTexture, playerSheet, attackFrames);
@@ -90,8 +85,6 @@ class GameMain : Game, IRenderableObjectsProvider
         camera = new Camera(renderer.ViewportDimensions);
         camera.Follow(player);
     }
-
-
 
     protected override void UnloadContent()
     {
