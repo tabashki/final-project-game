@@ -8,13 +8,15 @@ namespace TeamCherry.Project;
 
 class JsonAssetLoader<T> : IAssetLoader
 {
-    protected readonly JsonSerializerOptions defaultOptions = new JsonSerializerOptions
+    protected JsonSerializerOptions DefaultOptions => new JsonSerializerOptions
     {
         ReadCommentHandling = JsonCommentHandling.Skip,
         AllowTrailingCommas = true,
+        IncludeFields = true,
     };
 
     public Type AssetType => typeof(T);
+    public bool IgnoreCache { get; private set; } = false;
     public string[] SupportedExtensions => [ ".json" ];
     public bool LoadSubAssets { get; set; } = true;
 
@@ -26,7 +28,7 @@ class JsonAssetLoader<T> : IAssetLoader
     public virtual object LoadFromStream(Stream stream, GameContentManager contentManager)
     {
         var reader = new StreamReader(stream);
-        JsonSerializerOptions opts = defaultOptions;
+        JsonSerializerOptions opts = DefaultOptions;
         if (LoadSubAssets)
         {
             AddDefaultSubAssetLoaders(opts.Converters, contentManager);
@@ -38,5 +40,10 @@ class JsonAssetLoader<T> : IAssetLoader
             throw new ContentLoadException($"Failed to load asset from stream: {typeof(T)}");
         }
         return asset;
+    }
+    
+    public JsonAssetLoader(bool ignoreCache = false)
+    {
+        IgnoreCache = ignoreCache;
     }
 }

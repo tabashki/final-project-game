@@ -24,7 +24,7 @@ class GameMain : Game, IRenderableObjectsProvider
     {
         // Replace the default ContentManager with our extended version
         gcm = new GameContentManager(Services);
-        gcm.RegisterLoader(new JsonAssetLoader<Player>());
+        gcm.RegisterLoader(new JsonAssetLoader<Player>(true));
         Content = gcm;
 
         gdm = new GraphicsDeviceManager(this);

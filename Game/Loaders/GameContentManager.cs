@@ -49,6 +49,7 @@ class GameContentManager : ContentManager
 
         if (assetLoaders.TryGetValue(assetType, out var loader))
         {
+            ignoreCache |= loader.IgnoreCache;
             if (!ignoreCache)
             {
                 if (loadedAssetCache.TryGetValue(assetName, out var cachedAsset))
