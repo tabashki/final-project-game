@@ -65,3 +65,11 @@ git add .
 git add .
 git commit -m "Initial commit"
 git push -u origin master
+git status
+git add .
+git commit -m "Loading from .json"
+git push origin level-system
+git branch
+git checkout -b level-system
+git add .
+git commit -m "loading from .json"
