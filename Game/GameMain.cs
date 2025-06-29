@@ -63,9 +63,8 @@ class GameMain : Game, IRenderableObjectsProvider
         renderer = new Renderer(GraphicsDevice, font);
         renderer.RenderableProvider = this;
 
-        // tilemap = Content.Load<TileMap>("Maps/Draft1");
         tilemap = Content.Load<TileMap>("Maps/TestingMultipleTilesets");
-        DebugDraw.Text($"{tilemap.PrintShort()}", Color.Aqua, float.PositiveInfinity);
+        DebugDraw.Text($"Loaded tilemap: {tilemap.PrintShort()}", Color.Aqua, 4f);
         Maps.Add(tilemap);
         
         player = Content.Load<Player>("Entities/Player");
