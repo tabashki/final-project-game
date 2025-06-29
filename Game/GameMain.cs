@@ -6,23 +6,18 @@ using System.Diagnostics;
 
 namespace TeamCherry.Project;
 
-class GameMain : Game, IRenderableObjectsProvider
+class GameMain : Game
 {
     private GameContentManager gcm;
     private GraphicsDeviceManager gdm;
     private InputManager input;
     private Renderer renderer;
-    private Player player;
     private SpriteFont font;
-    private List<Entity> Entites = new();
+    private Level level;
     private Camera camera;
-
-    public IReadOnlyList<IBatchedRenderable> RenderableObjects => Entites.AsReadOnly();
-    public Matrix RenderTransform => camera.GetTransformMatrix();
 
     private GameMain() : base()
     {
-        // Replace the default ContentManager with our extended version
         gcm = new GameContentManager(Services);
         gcm.RegisterLoader(new JsonAssetLoader<Player>(true));
         Content = gcm;
@@ -48,13 +43,39 @@ class GameMain : Game, IRenderableObjectsProvider
 
         font = Content.Load<SpriteFont>("Fonts/Dogica");
         renderer = new Renderer(GraphicsDevice, font);
-        renderer.RenderableProvider = this;
-
-        player = Content.Load<Player>("Entities/Player");
-        Entites.Add(player);
 
         camera = new Camera(renderer.ViewportDimensions);
-        camera.Follow(player);
+
+        SwitchLevel(1);
+    }
+
+    private void SwitchLevel(int levelNumber)
+    {
+        var playerTexture = Content.Load<Texture2D>("Sprites/guy");
+
+        level = levelNumber switch
+        {
+            1 => Levels.CreateLevel1(playerTexture),
+            2 => Levels.CreateLevel2(playerTexture),
+            3 => Levels.CreateLevel3(playerTexture),
+            _ => Levels.CreateLevel1(playerTexture),
+        };
+
+        renderer.RenderableProvider = level;
+
+        var player = FindPlayerInLevel();
+        if (player != null)
+            camera.Follow(player);
+    }
+
+    private Player? FindPlayerInLevel()
+    {
+        foreach (var entity in level.GetRenderableObjects())
+        {
+            if (entity is Player p)
+                return p;
+        }
+        return null;
     }
 
     protected override void UnloadContent()
@@ -68,26 +89,34 @@ class GameMain : Game, IRenderableObjectsProvider
     {
         if (input.KeyJustPressed(Keys.OemTilde))
         {
-            // Toggle debug drawing with tilde (~) key
             DebugDraw.Enabled = !DebugDraw.Enabled;
         }
 
         float deltaTimeMs = gameTime.DeltaTime() * 1e3f;
         float fps = 1e3f / deltaTimeMs;
         DebugDraw.Text($"dt: {deltaTimeMs:f3} ms (fps: {fps:f0})", Color.White);
-        DebugDraw.Text($"position: {player.Position.X:f1}, {player.Position.Y:f1}", Color.White);
+        var player = FindPlayerInLevel();
+        if (player != null)
+            DebugDraw.Text($"position: {player.Position.X:f1}, {player.Position.Y:f1}", Color.White);
     }
 
     protected override void Update(GameTime gameTime)
     {
         input.Update();
 
-        player.SetMoveInput(input.MoveInput);
-        player.Update(gameTime);
+        if (input.KeyJustPressed(Keys.D1))
+            SwitchLevel(1);
+        else if (input.KeyJustPressed(Keys.D2))
+            SwitchLevel(2);
+        else if (input.KeyJustPressed(Keys.D3))
+            SwitchLevel(3);
+
+        level.Update(gameTime);
 
         camera.Update(gameTime);
 
         DebugUpdate(gameTime);
+
         base.Update(gameTime);
     }
 
@@ -99,9 +128,7 @@ class GameMain : Game, IRenderableObjectsProvider
 
     public static void Main()
     {
-        using (var game = new GameMain())
-        {
-            game.Run();
-        }
+        using var game = new GameMain();
+        game.Run();
     }
 }

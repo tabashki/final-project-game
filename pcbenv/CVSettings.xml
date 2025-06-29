@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Allegro Color/Visibility Settings -->
+<!-- Contains settings for the Color Dialog and Visiblity Pane -->
+<!-- Version 3.0 -->
+<ColorVisibility>
+
+  <LastTab>Display</LastTab>
+
+  <Favorites/>
+
+  <VisColumns>
+    <Column>Etch</Column>
+    <Column>Via Class</Column>
+    <Column>Pin</Column>
+    <Column>Drc Error Class</Column>
+  </VisColumns>
+
+  <VisSizing>
+    <Space>4</Space>
+    <ButtonSize>16</ButtonSize>
+  </VisSizing>
+
+  <GlobalVisibility>Show</GlobalVisibility>
+
+  <ViewSelection>Show</ViewSelection>
+
+  <StackupSelection>Show</StackupSelection>
+
+  <Conductors>Show</Conductors>
+
+  <Planes>Show</Planes>
+
+  <Masks>Show</Masks>
+
+</ColorVisibility>
