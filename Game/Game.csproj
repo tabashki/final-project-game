@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\FNA\FNA.Core.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="./Content/**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <Content Include="../fnalibs/linux/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Content Include="../fnalibs/macos/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <Content Include="../fnalibs/windows/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Effects Include="Effects/DebugDraw.fx" />
+  </ItemGroup>
+
+  <!-- Must be manually invoked using: dotnet msbuild -t:CompileEffects -->
+  <Target Name="CompileEffects" Inputs="@(Effects)" Outputs="@(Effects -> 'content/%(RelativeDir)%(Filename).fxb' )">
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+      <Fxc>wine Tools/fxc.exe</Fxc>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+      <Fxc>wine Tools/fxc.exe</Fxc>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+      <Fxc>Tools/fxc.exe</Fxc>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(IntermediateOutputPath)%(Effects.RelativeDir)"/>
+    <Exec Command="$(Fxc) /nologo /Vd /T fx_2_0 /Fo &quot;content/%(Effects.RelativeDir)%(Effects.Filename).fxb&quot; &quot;%(Effects.Identity)&quot;" />
+  </Target>
+
+</Project>

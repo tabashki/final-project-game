@@ -73,3 +73,21 @@ git branch
 git checkout -b level-system
 git add .
 git commit -m "loading from .json"
+git branch
+git status
+git add .
+git commit -m "level system"
+git push origin level-system
+git remote -v
+git remote add origin https://github.com/tabashki/final-project-game/tree/main
+git push -u origin level-system
+git remote add origin https://github.com/tabashki/final-project-game/tree/main
+git remote add origin https://github.com/tabashki/final-project-game
+git remote -v
+get remote set-url origin https://github.com/tabashki/final-project-game.git~
+git remote set-url origin https://github.com/tabashki/final-project-game.git~
+git push -u origin level-system
+git remote set-url origin https://github.com/tabashki/final-project-game.git
+git push -u origin level-system
+git pull origin level-system
+git pull origin level-system --allow-unrelated-histories
