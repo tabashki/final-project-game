@@ -11,30 +11,30 @@ public class TileMap : IMap, IBatchedRenderable
 {
     // TMJ properties
     [JsonPropertyName("width")]
-    public int MapWidth { get; set; }
+    public int MapWidth { get; init; }
 
     [JsonPropertyName("height")]
-    public int MapHeight { get; set; }
+    public int MapHeight { get; init; }
 
     [JsonPropertyName("tilewidth")]
-    public int TileWidth { get; set; }
+    public int TileWidth { get; init; }
 
     [JsonPropertyName("tileheight")]
-    public int TileHeight { get; set; }
+    public int TileHeight { get; init; }
 
     [JsonPropertyName("layers")]
-    public List<TileLayer>? Layers { get; set; }
+    public List<TileLayer>? Layers { get; init; }
     IReadOnlyList<ILayer>? IMap.Layers
     {
         get => Layers;
-        set => Layers = value?.Cast<TileLayer>().ToList();
+        init => Layers = value?.Cast<TileLayer>().ToList();
     }
     [JsonPropertyName("tilesets")]
-    public List<Tileset>? Tilesets { get; set; }
+    public List<Tileset>? Tilesets { get; init; }
     IReadOnlyList<ITileset>? IMap.Tilesets
     {
         get => Tilesets;
-        set => Tilesets = value?.Cast<Tileset>().ToList();
+        init => Tilesets = value?.Cast<Tileset>().ToList();
     }
 
 
