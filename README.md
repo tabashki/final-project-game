@@ -1,5 +1,5 @@
-Final Project Game
-==================
+Project: Game
+=============
 
 _(Proper title TBD)_
 
@@ -34,6 +34,9 @@ dotnet run --project Game/Game.csproj
 **OR**
 
 Open the `Game.sln` solution in your IDE and build and run from there
+
+Effects
+=======
 
 Compile any changes to Effects using:
 ```
