@@ -18,7 +18,7 @@ class Renderer : IDisposable
     private static readonly SamplerState pointClamp = SamplerState.PointClamp;
     private static readonly DepthStencilState depthStencil = DepthStencilState.None;
     private static readonly RasterizerState rasterizerState = RasterizerState.CullCounterClockwise;
-    private const int viewportScale = 5;  // TODO: Zoom
+    private const int viewportScale = 5;
 
     public IRenderableObjectsProvider? RenderableProvider { get; set; } = null;
     public Vector2 ViewportDimensions => new Vector2(renderTarget.Width, renderTarget.Height);
