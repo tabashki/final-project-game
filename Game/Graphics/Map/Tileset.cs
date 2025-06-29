@@ -7,38 +7,38 @@ public class Tileset: ITileset
 {
     // TMJ properties
     [JsonPropertyName("firstgid")]
-    public int FirstGID { get; set; }  // First global ID of tileset
+    public int FirstGID { get; init; }  // First global ID of tileset
 
     [JsonPropertyName("tilecount")]
-    public int TileCount { get; set; }
+    public int TileCount { get; init; }
 
     [JsonPropertyName("spacing")]
-    public int Spacing { get; set; }
+    public int Spacing { get; init; }
 
     [JsonPropertyName("tilewidth")]
-    public int TileWidth { get; set; }
+    public int TileWidth { get; init; }
 
     [JsonPropertyName("tileheight")]
-    public int TileHeight { get; set; }
+    public int TileHeight { get; init; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public string? Name { get; init; }
 
     [JsonPropertyName("margin")]
-    public int ImageMargin { get; set; }
+    public int ImageMargin { get; init; }
 
     [JsonPropertyName("columns")]
-    public int TilesPerRow { get; set; }
+    public int TilesPerRow { get; init; }
 
     [JsonPropertyName("image")]
-    public Texture2D? Texture { get; set; }
+    public Texture2D? Texture { get; init; }
 
     [JsonPropertyName("imageheight")]
-    public int ImageHeight { get; set; }
+    public int ImageHeight { get; init; }
 
     [JsonPropertyName("imagewidth")]
-    public int ImageWidth { get; set; }
+    public int ImageWidth { get; init; }
 
     [JsonPropertyName("tiles")]
-    public List<Tile>? Tiles { get; set; }
+    public List<Tile>? Tiles { get; init; }
 }
