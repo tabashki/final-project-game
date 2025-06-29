@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TeamCherry.Project;
 
-class Camera
+public class Camera
 {
     private Vector2 position;
     private Vector2 viewportDimensions;
@@ -49,4 +49,8 @@ class Camera
         return matrix;
     }
 
+    internal void Follow(object player)
+    {
+        throw new NotImplementedException();
+    }
 }

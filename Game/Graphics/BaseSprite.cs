@@ -11,6 +11,7 @@ public abstract class BaseSprite : IBatchedRenderable
     public Vector2 Position { get; protected set; } = Vector2.Zero;
     public Color Color { get; protected set; } = Color.White;
     public float Rotation { get; protected set; } = 0f;
+    
     public Vector2 RotationOrigin { get; protected set; } = Vector2.Zero;
     public SpriteEffects SpriteEffects { get; protected set; } = SpriteEffects.None;
     public Rectangle? SourceRectangle { get; protected set; } = null;

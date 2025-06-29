@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TeamCherry.Project;
 
-class Player : Entity
+public class Player : Entity
 {
     [JsonInclude]
     public float MaxSpeed { get; private set; } = 100f;

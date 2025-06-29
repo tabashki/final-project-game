@@ -26,7 +26,7 @@ class JsonAssetLoader<T> : IAssetLoader
     public virtual object LoadFromStream(Stream stream, GameContentManager contentManager)
     {
         var reader = new StreamReader(stream);
-        JsonSerializerOptions opts = defaultOptions;
+        JsonSerializerOptions opts = new JsonSerializerOptions(defaultOptions);
         if (LoadSubAssets)
         {
             AddDefaultSubAssetLoaders(opts.Converters, contentManager);

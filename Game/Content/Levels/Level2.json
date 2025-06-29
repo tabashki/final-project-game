@@ -1,0 +1,7 @@
+{
+  "$type": "Player",
+  "PlayerStart": {
+    "X": 200,
+    "Y": 180
+  }
+}

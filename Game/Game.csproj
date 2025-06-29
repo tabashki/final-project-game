@@ -28,7 +28,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="content\levels\Level1.json" />
+    <Content Include="content\levels\Level2.json" />
+    <Content Include="content\levels\Level3.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Effects Include="Effects/DebugDraw.fx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\Levels\" />
   </ItemGroup>
 
   <!-- Must be manually invoked using: dotnet msbuild -t:CompileEffects -->
@@ -45,7 +55,7 @@
       <Fxc>Tools/fxc.exe</Fxc>
     </PropertyGroup>
 
-    <MakeDir Directories="$(IntermediateOutputPath)%(Effects.RelativeDir)"/>
+    <MakeDir Directories="$(IntermediateOutputPath)%(Effects.RelativeDir)" />
     <Exec Command="$(Fxc) /nologo /Vd /T fx_2_0 /Fo &quot;content/%(Effects.RelativeDir)%(Effects.Filename).fxb&quot; &quot;%(Effects.Identity)&quot;" />
   </Target>
 

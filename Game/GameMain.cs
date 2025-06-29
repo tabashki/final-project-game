@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace TeamCherry.Project;
 
@@ -19,7 +20,7 @@ class GameMain : Game
     private GameMain() : base()
     {
         gcm = new GameContentManager(Services);
-        gcm.RegisterLoader(new JsonAssetLoader<Player>());
+        gcm.RegisterLoader(new JsonAssetLoader<Level>());
         Content = gcm;
 
         gdm = new GraphicsDeviceManager(this);
@@ -28,11 +29,6 @@ class GameMain : Game
         gdm.SynchronizeWithVerticalRetrace = true;
 
         input = new InputManager();
-    }
-
-    protected override void Initialize()
-    {
-        base.Initialize();
     }
 
     protected override void LoadContent()
@@ -44,39 +40,29 @@ class GameMain : Game
         font = Content.Load<SpriteFont>("Fonts/Dogica");
         renderer = new Renderer(GraphicsDevice, font);
 
-        camera = new Camera(renderer.ViewportDimensions);
-
-        SwitchLevel(1);
+        LoadLevel(1);
     }
 
-    private void SwitchLevel(int levelNumber)
+    private void LoadLevel(int levelNumber)
     {
-        var playerTexture = Content.Load<Texture2D>("Sprites/guy");
+        string levelPath = $"Levels/Level{levelNumber}";
+        level = Content.Load<Level>(levelPath);
+        level.LoadContent(Content);
 
-        level = levelNumber switch
+        if (level.Player != null)
         {
-            1 => Levels.CreateLevel1(playerTexture),
-            2 => Levels.CreateLevel2(playerTexture),
-            3 => Levels.CreateLevel3(playerTexture),
-            _ => Levels.CreateLevel1(playerTexture),
-        };
-
-        renderer.RenderableProvider = level;
-
-        var player = FindPlayerInLevel();
-        if (player != null)
-            camera.Follow(player);
-    }
-
-    private Player? FindPlayerInLevel()
-    {
-        foreach (var entity in level.GetRenderableObjects())
-        {
-            if (entity is Player p)
-                return p;
+            Debug.WriteLine($"Player loaded at position: {level.Player.Position}");
         }
-        return null;
+        else
+        {
+            Debug.WriteLine("Player not found in level!");
+        }
+
+        camera = level.Camera ?? new Camera(renderer.ViewportDimensions);
+        renderer.RenderableProvider = level;
     }
+
+
 
     protected override void UnloadContent()
     {
@@ -92,12 +78,7 @@ class GameMain : Game
             DebugDraw.Enabled = !DebugDraw.Enabled;
         }
 
-        float deltaTimeMs = gameTime.DeltaTime() * 1e3f;
-        float fps = 1e3f / deltaTimeMs;
-        DebugDraw.Text($"dt: {deltaTimeMs:f3} ms (fps: {fps:f0})", Color.White);
-        var player = FindPlayerInLevel();
-        if (player != null)
-            DebugDraw.Text($"position: {player.Position.X:f1}, {player.Position.Y:f1}", Color.White);
+        level.DebugUpdate(gameTime);
     }
 
     protected override void Update(GameTime gameTime)
@@ -105,18 +86,27 @@ class GameMain : Game
         input.Update();
 
         if (input.KeyJustPressed(Keys.D1))
-            SwitchLevel(1);
+        {
+            LoadLevel(1);
+        }
         else if (input.KeyJustPressed(Keys.D2))
-            SwitchLevel(2);
+        {
+            LoadLevel(2);
+        }
         else if (input.KeyJustPressed(Keys.D3))
-            SwitchLevel(3);
+        {
+            LoadLevel(3);
+        }
+
+        if (level.Player != null)
+        {
+            level.Player.SetMoveInput(input.MoveInput);
+        }
 
         level.Update(gameTime);
-
         camera.Update(gameTime);
 
         DebugUpdate(gameTime);
-
         base.Update(gameTime);
     }
 
@@ -128,7 +118,9 @@ class GameMain : Game
 
     public static void Main()
     {
-        using var game = new GameMain();
-        game.Run();
+        using (var game = new GameMain())
+        {
+            game.Run();
+        }
     }
 }
