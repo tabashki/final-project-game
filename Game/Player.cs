@@ -14,32 +14,15 @@ public class Player : Entity
     private Vector2 targetVelocity = Vector2.Zero;
     private Vector2 moveInput = Vector2.Zero;
 
-    private AnimatedSprite? movementAnimation;
-    private AnimatedSprite? attackAnimation;
+    internal AnimatedSprite? MovementAnimation;
+    internal AnimatedSprite? AttackAnimation;
 
     private bool isAttacking = false;
     private MouseState previousMouse;
 
-    public override SpriteEffects SpriteEffects => flipHoriz ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-
-    public override Rectangle? SourceRectangle =>
-        isAttacking ? attackAnimation?.CurrentFrameRectangle : movementAnimation?.CurrentFrameRectangle;
-
-    public override Vector2 RotationOrigin =>
-        new Vector2(SourceRectangle?.Width ?? 0, SourceRectangle?.Height ?? 0) / 2f;
-
-    private static Camera2D? camera;
-    private static bool cameraTogglePressedLastFrame = false;
-
-    public Player() : base(null) { }
-
-    public Player(AnimatedSprite movementAnimation, AnimatedSprite attackAnimation)
-        : base(movementAnimation.SpriteSheet)
+    public Player(Texture2D texture) : base(texture)
     {
-        this.movementAnimation = movementAnimation;
-        this.attackAnimation = attackAnimation;
-        this.Texture = movementAnimation.SpriteSheet;
-        this.Scale = 0.05f; // Adjust as needed
+        Scale = 0.1f; // Due to large player sprites
     }
 
     public void SetMoveInput(Vector2 input)
@@ -53,30 +36,15 @@ public class Player : Entity
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        // === Camera Toggle ===
-        var keyboard = Keyboard.GetState();
-        bool toggleCamera = keyboard.IsKeyDown(Keys.C);
-
-        if (toggleCamera && !cameraTogglePressedLastFrame)
-        {
-            camera ??= new Camera2D(200, 100);
-            camera.IsEnabled = !camera.IsEnabled;
-        }
-
-        cameraTogglePressedLastFrame = toggleCamera;
-
-        if (camera?.IsEnabled == true)
-            camera.Update(Position);
-
         // === Attack Input ===
         MouseState currentMouse = Mouse.GetState();
         bool mouseJustPressed = currentMouse.LeftButton == ButtonState.Pressed &&
                                 previousMouse.LeftButton == ButtonState.Released;
 
-        if (mouseJustPressed && !isAttacking && attackAnimation != null)
+        if (mouseJustPressed && !isAttacking && AttackAnimation != null)
         {
             isAttacking = true;
-            attackAnimation.Reset();
+            AttackAnimation.Reset();
         }
 
         // === Movement ===
@@ -88,6 +56,7 @@ public class Player : Entity
         Velocity = Vector2.Lerp(Velocity, targetVelocity, t);
 
         if (Velocity.LengthSquared() < epsilonSq)
+        {
             Velocity = Vector2.Zero;
         }
 
@@ -103,34 +72,34 @@ public class Player : Entity
         Position += Velocity * deltaTime;
 
         // === Animation Handling ===
-        if (isAttacking && attackAnimation != null)
+        if (isAttacking && AttackAnimation != null)
         {
-            attackAnimation.Update(gameTime);
-            Texture = attackAnimation.SpriteSheet;
+            AttackAnimation.Update(gameTime);
+            Texture = AttackAnimation.SpriteSheet;
 
             // Assuming row 0 of attack sheet is the correct row
-            attackAnimation.SetRow(0);
+            AttackAnimation.SetRow(0);
 
-            if (attackAnimation.HasEnded)
+            if (AttackAnimation.HasEnded)
             {
                 isAttacking = false;
-                attackAnimation.Reset();
+                AttackAnimation.Reset();
             }
         }
-        else if (movementAnimation != null)
+        else if (MovementAnimation != null)
         {
-            Texture = movementAnimation.SpriteSheet;
+            Texture = MovementAnimation.SpriteSheet;
 
             if (MathF.Abs(Velocity.X) > epsilonSq)
-                movementAnimation.SetRow(1); // left/right
+                MovementAnimation.SetRow(1); // left/right
             else if (Velocity.Y < -epsilonSq)
-                movementAnimation.SetRow(3); // up
+                MovementAnimation.SetRow(3); // up
             else if (Velocity.Y > epsilonSq)
-                movementAnimation.SetRow(0); // down
+                MovementAnimation.SetRow(0); // down
             else
-                movementAnimation.SetRow(2); // idle
+                MovementAnimation.SetRow(2); // idle
 
-            movementAnimation.Update(gameTime);
+            MovementAnimation.Update(gameTime);
         }
 
         // === Debug Visuals ===
@@ -149,12 +118,9 @@ public class Player : Entity
                 DebugDraw.Text("ATTACKING", Color.Red, 0.1f);
         }
 
-        if (camera?.IsEnabled == true)
-            DebugDraw.Rect(camera.GetViewRectangle(), Color.Red);
-
+        SourceRectangle = isAttacking ? AttackAnimation?.CurrentFrameRectangle
+           : MovementAnimation?.CurrentFrameRectangle;
         previousMouse = currentMouse;
         base.Update(gameTime);
     }
-
-    public static Matrix GetCameraTransform() => camera?.GetTransform() ?? Matrix.Identity;
 }

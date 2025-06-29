@@ -14,6 +14,7 @@ public abstract class BaseSprite : IBatchedRenderable
     public Vector2 RotationOrigin { get; protected set; } = Vector2.Zero;
     public SpriteEffects SpriteEffects { get; protected set; } = SpriteEffects.None;
     public Rectangle? SourceRectangle { get; protected set; } = null;
+    public float Scale { get; protected set; } = 1f;
 
     public BaseSprite(Texture2D texture)
     {
@@ -25,7 +26,7 @@ public abstract class BaseSprite : IBatchedRenderable
         spriteBatch.Draw(
             Texture, Position, SourceRectangle,
             Color, Rotation, RotationOrigin,
-            1f, SpriteEffects, 0
+            Scale, SpriteEffects, 0
         );
     }
 }

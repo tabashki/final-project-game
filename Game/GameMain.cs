@@ -52,34 +52,31 @@ class GameMain : Game, IRenderableObjectsProvider
         base.Initialize();
     }
 
-protected override void LoadContent()
-{
-    base.LoadContent();
-    DebugDraw.Init(Content, GraphicsDevice);
-    DebugDraw.Text($"use tilde (~) to toggle debug draw", Color.LightBlue, float.PositiveInfinity);
+    protected override void LoadContent()
+    {
+        base.LoadContent();
+        DebugDraw.Init(Content, GraphicsDevice);
+        DebugDraw.Text($"use tilde (~) to toggle debug draw", Color.LightBlue, float.PositiveInfinity);
 
-    font = Content.Load<SpriteFont>("Fonts/Dogica");
-    renderer = new Renderer(GraphicsDevice, font);
-    renderer.RenderableProvider = this;
+        font = Content.Load<SpriteFont>("Fonts/Dogica");
+        renderer = new Renderer(GraphicsDevice, font);
+        renderer.RenderableProvider = this;
 
         tilemap = Content.Load<TileMap>("Maps/TestingMultipleTilesets");
         DebugDraw.Text($"Loaded tilemap: {tilemap.PrintShort()}", Color.Aqua, 4f);
         Maps.Add(tilemap);
         
         player = Content.Load<Player>("Entities/Player");
-        Texture2D playerTexture = Content.Load<Texture2D>("Sprites/Knight");
-        //Texture2D spriteSheet = Content.Load<Texture2D>("Sprites/Knight-Walk_00-sheet");  -- use for a single spread shit
-        string json = File.ReadAllText("Content/Json/spritesheet.json");
-        Rectangle[] sourceRects = AsepriteSheet.LoadSourceRects(json);
-        SpriteSheet playerSheet = new SpriteSheet(playerTexture, sourceRects);
 
-    // === Load attack animation (14 columns × 1 rows) === 
-    Texture2D attackSpriteSheet = Content.Load<Texture2D>("Sprites/KnightAttack");
-    AnimatedSprite attackAnimation = new AnimatedSprite(attackSpriteSheet, cols: 14, rows: 1, fps: 28, loop: false);
+        // === Load attack animation (14 columns × 1 rows) === 
+        Texture2D moveSheet = Content.Load<Texture2D>("Sprites/KnightSheet");
+        player.MovementAnimation = new AnimatedSprite(moveSheet, cols: 5, rows: 4, fps: 10);
 
-        // Initialize player with idle + attack animation
-        player = new Player(playerTexture, playerSheet, attackFrames);
-        player.Texture = attackFrames[0];
+        // === Load attack animation (14 columns × 1 rows) === 
+        Texture2D attackSpriteSheet = Content.Load<Texture2D>("Sprites/KnightAttack");
+        player.AttackAnimation = new AnimatedSprite(attackSpriteSheet, cols: 14, rows: 1, fps: 28, loop: false);
+
+        // Initialize player with idle + attack animations
         Entites.Add(player);
 
         camera = new Camera(renderer.ViewportDimensions);
