@@ -33,7 +33,6 @@ class GameMain : Game, IRenderableObjectsProvider
     
     private GameMain() : base()
     {
-        // Replace the default ContentManager with our extended version
         gcm = new GameContentManager(Services);
         gcm.RegisterLoader(new JsonAssetLoader<Player>(true));
         gcm.RegisterLoader(new TiledAssetLoader());
@@ -68,6 +67,16 @@ class GameMain : Game, IRenderableObjectsProvider
         Maps.Add(tilemap);
         
         player = Content.Load<Player>("Entities/Player");
+
+        // === Load attack animation (14 columns × 1 rows) === 
+        Texture2D moveSheet = Content.Load<Texture2D>("Sprites/KnightSheet");
+        player.MovementAnimation = new AnimatedSprite(moveSheet, cols: 5, rows: 4, fps: 10);
+
+        // === Load attack animation (14 columns × 1 rows) === 
+        Texture2D attackSpriteSheet = Content.Load<Texture2D>("Sprites/KnightAttack");
+        player.AttackAnimation = new AnimatedSprite(attackSpriteSheet, cols: 14, rows: 1, fps: 28, loop: false);
+
+        // Initialize player with idle + attack animations
         Entites.Add(player);
 
         camera = new Camera(renderer.ViewportDimensions);

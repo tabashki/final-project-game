@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace TeamCherry.Project;
 
-class GameContentManager : ContentManager
+public class GameContentManager : ContentManager
 {
     // Duplicate of `loadedAssets` from the base class, which is sadly private
     private Dictionary<string, object> loadedAssetCache = new(StringComparer.OrdinalIgnoreCase);

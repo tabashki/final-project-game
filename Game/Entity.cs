@@ -5,16 +5,26 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TeamCherry.Project;
 
-abstract class Entity : BaseSprite
+public abstract class Entity : BaseSprite
 {
     public virtual Vector2 Velocity { get; protected set; } = Vector2.Zero;
-    
+
     public virtual Rectangle BoundingBox {
         get {
-            var r = Texture.Bounds;
             int x = (int)MathF.Round(Position.X);
             int y = (int)MathF.Round(Position.Y);
-            r.Offset(new Point(x, y));
+            float w = Texture.Bounds.Width;
+            float h = Texture.Bounds.Height;
+
+            if (SourceRectangle != null)
+            {
+                w = SourceRectangle.Value.Width;
+                h = SourceRectangle.Value.Height;
+            }
+
+            w *= Scale;
+            h *= Scale;
+            Rectangle r = new Rectangle(x, y, (int)MathF.Round(w), (int)MathF.Round(h));
             return r;
         }
     }
