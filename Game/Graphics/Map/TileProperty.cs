@@ -5,11 +5,11 @@ namespace TeamCherry.Project;
 public class TileProperty
 {
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public string? Name { get; init; }
 
     [JsonPropertyName("type")]
-    public string? Type { get; set; }
+    public string? Type { get; init; }
 
     [JsonPropertyName("value")]
-    public object? Value { get; set; }
+    public object? Value { get; init; }
 }

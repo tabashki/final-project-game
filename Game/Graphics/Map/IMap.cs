@@ -2,10 +2,10 @@ namespace TeamCherry.Project;
 
 interface IMap
 {
-    public int MapWidth { get; set; }
-    public int MapHeight { get; set; }
-    public int TileWidth { get; set; }
-    public int TileHeight { get; set; }
-    public IReadOnlyList<ILayer>? Layers { get; set; }
-    public IReadOnlyList<ITileset>? Tilesets { get; set; }
+    public int MapWidth { get; init; }
+    public int MapHeight { get; init; }
+    public int TileWidth { get; init; }
+    public int TileHeight { get; init; }
+    public IReadOnlyList<ILayer>? Layers { get; init; }
+    public IReadOnlyList<ITileset>? Tilesets { get; init; }
 }
