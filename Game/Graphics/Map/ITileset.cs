@@ -3,14 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 public interface ITileset
 {
-    public int TileCount { get; set; }
-    public int Spacing { get; set; }
-    public int TileWidth { get; set; }
-    public int TileHeight { get; set; }
-    public string? Name { get; set; }
-    public int ImageMargin { get; set; }
-    public int TilesPerRow { get; set; }
-    public Texture2D? Texture { get; set; }
-    public int ImageHeight { get; set; }
-    public int ImageWidth { get; set; }
+    public int TileCount { get; init; }
+    public int Spacing { get; init; }
+    public int TileWidth { get; init; }
+    public int TileHeight { get; init; }
+    public string? Name { get; init; }
+    public int ImageMargin { get; init; }
+    public int TilesPerRow { get; init; }
+    public Texture2D? Texture { get; init; }
+    public int ImageHeight { get; init; }
+    public int ImageWidth { get; init; }
 }
