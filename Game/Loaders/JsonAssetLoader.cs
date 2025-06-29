@@ -17,7 +17,7 @@ class JsonAssetLoader<T> : IAssetLoader
 
     public Type AssetType => typeof(T);
     public bool IgnoreCache { get; private set; } = false;
-    public string[] SupportedExtensions => [ ".json" ];
+    public virtual string[] SupportedExtensions => [ ".json" ];
     public bool LoadSubAssets { get; set; } = true;
 
     protected void AddDefaultSubAssetLoaders(IList<JsonConverter> list, GameContentManager contentManager)
